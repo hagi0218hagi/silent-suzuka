@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silent Suzuka - The Fastest Legend</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .hero-gradient {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+        }
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        .page-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link.active {
+            color: #2d5a27;
+            border-bottom: 2px solid #2d5a27;
+        }
+        .dark .nav-link.active {
+            color: #4c9a42;
+            border-bottom: 2px solid #4c9a42;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <button onclick="showPage('home')" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</button>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <button onclick="showPage('home')" class="nav-link hover:text-green-primary transition" id="nav-home">HOME</button>
+                <button onclick="showPage('history')" class="nav-link hover:text-green-primary transition" id="nav-history">HISTORY</button>
+                <button onclick="showPage('scenes')" class="nav-link hover:text-green-primary transition" id="nav-scenes">SCENES</button>
+                <button onclick="showPage('memorial')" class="nav-link hover:text-green-primary transition" id="nav-memorial">MEMORIAL</button>
+                <button onclick="showPage('goods')" class="nav-link hover:text-green-primary transition" id="nav-goods">GOODS</button>
+                
+                <!-- Search Bar -->
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." 
+                           class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button id="themeToggle" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button id="themeToggleMobile" class="text-xl">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <button onclick="showPage('home')" class="block w-full py-2">HOME</button>
+            <button onclick="showPage('history')" class="block w-full py-2">HISTORY</button>
+            <button onclick="showPage('scenes')" class="block w-full py-2">SCENES</button>
+            <button onclick="showPage('memorial')" class="block w-full py-2">MEMORIAL</button>
+            <button onclick="showPage('goods')" class="block w-full py-2">GOODS</button>
+        </div>
+    </nav>
+
+    <!-- Page: HOME -->
+    <section id="page-home" class="page-content active min-h-screen flex items-center justify-center hero-gradient text-white text-center">
+        <div class="px-4">
+            <div class="mb-6 inline-block border-2 border-white px-4 py-1 tracking-widest text-sm font-bold uppercase">Legendary Racehorse</div>
+            <h2 class="text-6xl md:text-8xl font-black mb-6 italic leading-tight">異次元の逃亡者</h2>
+            <p class="text-xl md:text-2xl mb-12 opacity-90 max-w-2xl mx-auto font-light">
+                「影さえ踏ませない」<br>
+                そのスピードは、誰にも追いつけない場所へ。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                <button onclick="showPage('history')" class="bg-white text-green-primary hover:bg-green-50 px-6 py-4 rounded-xl font-bold transition shadow-lg">競走履歴</button>
+                <button onclick="showPage('scenes')" class="bg-green-primary text-white hover:bg-green-hover px-6 py-4 rounded-xl font-bold transition shadow-lg">名場面</button>
+                <button onclick="showPage('memorial')" class="bg-white text-green-primary hover:bg-green-50 px-6 py-4 rounded-xl font-bold transition shadow-lg border border-green-100">お墓・墓参</button>
+                <button onclick="showPage('goods')" class="bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white/30 px-6 py-4 rounded-xl font-bold transition">グッズ</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page: HISTORY -->
+    <section id="page-history" class="page-content pt-32 pb-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">RACE HISTORY</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">サイレントスズカが駆け抜けた奇跡の軌跡</p>
+            </div>
+            <div class="space-y-6">
+                <!-- 1998.11.01 天皇賞(秋) -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-red-500">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-red-600 font-bold">1998.11.01</span>
+                            <h3 class="text-xl font-black mt-1">天皇賞(秋) (G1)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">東京競馬場 / 芝 2000m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-gray-100 dark:bg-stone-700 text-gray-500 px-4 py-1 rounded-full font-black text-sm">競走中止</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.10.11 毎日王冠 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.10.11</span>
+                            <h3 class="text-xl font-black mt-1">毎日王冠 (G2)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">東京競馬場 / 芝 1800m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:44.9</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.07.12 宝塚記念 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.07.12</span>
+                            <h3 class="text-xl font-black mt-1">宝塚記念 (G1)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">阪神競馬場 / 芝 2200m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 2:11.9</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.05.30 金鯱賞 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.05.30</span>
+                            <h3 class="text-xl font-black mt-1">金鯱賞 (G2)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">中京競馬場 / 芝 2000m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:57.8 (大差)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.03.14 中山記念 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.03.14</span>
+                            <h3 class="text-xl font-black mt-1">中山記念 (G2)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">中山競馬場 / 芝 1800m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:48.6</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.02.14 バレンタインS -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.02.14</span>
+                            <h3 class="text-xl font-black mt-1">バレンタインS (OP)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">東京競馬場 / 芝 1800m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:46.3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page: SCENES -->
+    <section id="page-scenes" class="page-content pt-32 pb-20 bg-gray-50 dark:bg-stone-950">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">FAMOUS SCENES</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">語り継がれる伝説の瞬間</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                <!-- 金鯱賞 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="https://images.unsplash.com/photo-1598974357851-98166a9d9b45?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="金鯱賞">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic">大差の衝撃 - 1998 金鯱賞</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        2着に11馬身もの差をつけた、日本競馬史上最も衝撃的な圧勝劇。
+                        このレースで「異次元の逃亡者」という異名が不動のものとなりました。
+                    </p>
+                </div>
+
+                <!-- 毎日王冠 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="毎日王冠">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic">伝説の三強対決 - 1998 毎日王冠</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        無敗の外国産馬エルコンドルパサーとグラスワンダーを真っ向勝負で完封。
+                        単勝1.2倍の期待に応えた、最強を証明した一戦です。
+                    </p>
+                </div>
+
+                <!-- 宝塚記念 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="takarazuka_kinen_race_1776235656273.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="宝塚記念">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic">悲願のG1初制覇 - 1998 宝塚記念</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        圧倒的な人気を背負い、ファン投票1位に応えて逃げ切り勝ち。
+                        「サイレントスズカ、どこまで行っても逃げまくる！」と実況が響きました。
+                    </p>
+                </div>
+
+                <!-- 天皇賞・秋 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="tenno_sho_race_1776235682958.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="天皇賞・秋">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center p-6 transition-opacity group-hover:opacity-0">
+                            <span class="text-5xl mb-2 font-black italic tracking-tighter text-green-primary">57.4s</span>
+                            <div class="text-sm font-bold opacity-80">1000m通過タイム</div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic text-red-600 dark:text-red-400">沈黙の日曜日 - 1998 天皇賞(秋)</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed font-bold">
+                        誰も追いつけないスピードの彼方へ消えた、最後の逃亡劇。
+                        あの日、東京競馬場が静まり返った瞬間を、私たちは決して忘れません。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page: MEMORIAL -->
+    <section id="page-memorial" class="page-content pt-32 pb-20 bg-white dark:bg-stone-900">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">MEMORIAL</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">故郷、北海道・平取町で静かに眠る</p>
+            </div>
+
+            <div class="bg-green-50 dark:bg-stone-800 rounded-3xl p-8 md:p-12 border border-green-100 dark:border-stone-700 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <h3 class="text-2xl font-black mb-4">稲原牧場 サイレントスズカの墓</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                            サイレントスズカは、生まれ故郷である北海道沙流郡平取町の「稲原牧場」に眠っています。
+                            牧場内には立派な墓碑が建立されており、今でも全国から多くのファンが献花に訪れます。
+                        </p>
+                        <div class="space-y-3 font-bold">
+                            <div class="flex items-start">
+                                <span class="bg-green-primary text-white text-xs px-2 py-1 rounded mt-1 mr-3">所在地</span>
+                                <p class="text-sm">北海道沙流郡平取町去場</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-green-primary text-white text-xs px-2 py-1 rounded mt-1 mr-3">アクセス</span>
+                                <p class="text-sm">新千歳空港から車で約1時間半</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-xl aspect-video bg-gray-200 dark:bg-stone-950 flex items-center justify-center text-gray-400 italic">
+                        [牧場の風景イメージ]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page: GOODS -->
+    <section id="page-goods" class="page-content pt-32 pb-20">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">COLLECTION</h2>
+            <div class="w-20 h-1 bg-green-primary mx-auto mb-16"></div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm hover:border-green-primary transition">
+                    <div class="aspect-square bg-gray-100 dark:bg-stone-900 rounded-xl mb-4 flex items-center justify-center text-4xl">🐴</div>
+                    <h4 class="font-black">アイドルホース</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            const activeNav = document.getElementById('nav-' + pageId);
+            if(activeNav) activeNav.classList.add('active');
+
+            window.scrollTo(0, 0);
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Dark Mode Logic
+        const toggleTheme = () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+            document.getElementById('themeToggleMobile').textContent = isDark ? '☀️' : '🌙';
+        };
+        document.getElementById('themeToggle').onclick = toggleTheme;
+        document.getElementById('themeToggleMobile').onclick = toggleTheme;
+
+        // Search Logic
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchIndex = [
+            { id: 'history', title: '競走履歴', text: '毎日王冠 金鯱賞 1998 宝塚記念 天皇賞' },
+            { id: 'scenes', title: '名場面', text: '大逃げ 11馬身 57.4秒 最後のレース' },
+            { id: 'memorial', title: 'メモリアル', text: '平取町 稲原牧場 お墓 墓参' },
+            { id: 'goods', title: 'コレクション', text: 'ぬいぐるみ グッズ' }
+        ];
+
+        searchInput.oninput = (e) => {
+            const query = e.target.value.toLowerCase();
+            if(!query) { searchResults.classList.add('hidden'); return; }
+            
+            const matches = searchIndex.filter(p => p.title.includes(query) || p.text.includes(query));
+            searchResults.innerHTML = matches.map(m => `
+                <button onclick="showPage('${m.id}'); document.getElementById('searchResults').classList.add('hidden');" 
+                        class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-stone-700 border-b dark:border-stone-700 last:border-0 transition">
+                    <div class="font-bold text-sm text-green-primary dark:text-green-400">${m.title}</div>
+                    <div class="text-xs text-gray-500 truncate">${m.text}</div>
+                </button>
+            `).join('');
+            
+            if(matches.length > 0) searchResults.classList.remove('hidden');
+            else searchResults.innerHTML = '<div class="p-4 text-xs text-gray-400">見つかりません</div>';
+            searchResults.classList.remove('hidden');
+        };
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Outside click to hide search
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#searchInput') && !e.target.closest('#searchResults')) {
+                searchResults.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
