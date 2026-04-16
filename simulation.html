@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILENT SUZUKA: 3D Simulation</title>
+    <!-- Modern Font loading -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,900&family=Noto+Sans+JP:ital,wght@1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --accent: #ffff00;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #030a16;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            user-select: none;
+        }
+        /* UI Overlay Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            z-index: 10;
+        }
+        .header {
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+            padding: 40px 0 80px 0;
+            margin: 0;
+        }
+        h1 {
+            color: #ffffff;
+            font-size: clamp(3rem, 6vw, 6rem);
+            margin: 0;
+            line-height: 1;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 
+                0 0 15px rgba(0, 255, 136, 0.6),
+                0 0 30px rgba(0, 255, 136, 0.4),
+                4px 4px 0px rgba(0, 0, 0, 0.8);
+            animation: pulseTitle 2s ease-in-out infinite alternate;
+        }
+        .subtitle {
+            color: var(--accent);
+            font-size: clamp(1rem, 2vw, 2rem);
+            letter-spacing: 1em;
+            margin-top: 15px;
+            margin-left: 1em; /* balance letter spacing */
+            text-shadow: 2px 2px 4px rgba(0,0,0,1), 0 0 10px rgba(255,255,0,0.5);
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        /* Manga style speedline overlay */
+        .speed-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.8);
+            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+        }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            text-shadow: 1px 1px 2px black;
+            font-family: monospace;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        @keyframes pulseTitle {
+            0% { transform: scale(1) skewX(-10deg); text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 4px 4px 0px rgba(0,0,0,0.8); }
+            100% { transform: scale(1.02) skewX(-10deg); text-shadow: 0 0 25px var(--primary), 0 0 50px var(--primary), 4px 4px 0px rgba(0,0,0,0.8); }
+        }
+
+        #webgl-container {
+            width: 100vw; 
+            height: 100vh;
+            cursor: grab;
+        }
+        #webgl-container:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← BACK TO HOME</a>
+
+    <div id="ui-layer">
+        <div class="header">
+            <h1>SILENT SUZUKA</h1>
+            <div class="subtitle">異次元の逃亡者</div>
+        </div>
+        <div class="speed-overlay"></div>
+        <div class="controls-hint">DRAG TO ROTATE CAMERA • SCROLL TO ZOOM</div>
+    </div>
+    
+    <div id="webgl-container"></div>
+
+    <!-- Required Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        /**
+         * 3D Horse Racing Simulation: Silent Suzuka Edition
+         * Completely Vanilla JS & Three.js with dynamically generated textures
+         */
+
+        // ==========================================
+        // 1. GLOBAL VARIABLES & STATE
+        // ==========================================
+        let scene, camera, renderer;
+        let courseGroup, suzukaGroup;
+        let opponents = [];
+        let particlesSystem, speedLinesSystem;
+        let animTime = 0;
+
+        // Camera settings
+        const fovBase = 75; // Wide FOV for speed perception
+        let cameraParams = {
+            theta: Math.PI * 0.15, // Horizontal angle start
+            phi: Math.PI * 0.35,   // Vertical angle start
+            radius: 12,            // Distance from subject
+            target: new THREE.Vector3(0, 3, -4) // Subject look point
+        };
+
+        // Mouse controls state
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+
+        // ==========================================
+        // 2. INITIALIZATION ROUTINE
+        // ==========================================
+        function init() {
+            const container = document.getElementById('webgl-container');
+
+            // --- Scene Setup ---
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x388E3C); // Vibrant Turf color at horizon
+            scene.fog = new THREE.FogExp2(0x388E3C, 0.012);
+
+            // --- Camera Setup ---
+            camera = new THREE.PerspectiveCamera(fovBase, window.innerWidth / window.innerHeight, 0.1, 1000);
+            updateCameraPosition();
+
+            // --- Renderer Setup ---
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Cap at 2 for performance
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // --- Lights ---
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfffff0, 1.2);
+            dirLight.position.set(30, 60, -30);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.camera.near = 10;
+            dirLight.shadow.camera.far = 150;
+            const orthoSize = 40;
+            dirLight.shadow.camera.left = -orthoSize;
+            dirLight.shadow.camera.right = orthoSize;
+            dirLight.shadow.camera.top = orthoSize;
+            dirLight.shadow.camera.bottom = -orthoSize;
+            dirLight.shadow.bias = -0.001;
+            scene.add(dirLight);
+
+            // --- Build 3D Objects ---
+            createCourse();
+            createHorses();
+            createSpeedEffects();
+
+            // --- Event Listeners ---
+            window.addEventListener('resize', handleResize);
+            
+            // Orbit Control Equivalent Events
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.offsetX, y: e.offsetY };
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaMove = {
+                    x: e.offsetX - previousMousePosition.x,
+                    y: e.offsetY - previousMousePosition.y
+                };
+                
+                // Adjust sensitivity
+                cameraParams.theta -= deltaMove.x * 0.006;
+                cameraParams.phi -= deltaMove.y * 0.006;
+                
+                // Clamp phi angle to prevent flipping under ground or directly over
+                cameraParams.phi = Math.max(0.05, Math.min(Math.PI / 2 - 0.05, cameraParams.phi));
+                
+                previousMousePosition = { x: e.offsetX, y: e.offsetY };
+            });
+            
+            window.addEventListener('mouseup', () => isDragging = false);
+            window.addEventListener('mouseleave', () => isDragging = false);
+            container.addEventListener('wheel', (e) => {
+                cameraParams.radius += e.deltaY * 0.015;
+                cameraParams.radius = Math.max(6, Math.min(40, cameraParams.radius));
+            });
+
+            // Start loop
+            animate();
+        }
+
+        // ==========================================
+        // 3. UTILITY & TEXTURE GENERATION
+        // ==========================================
+        
+        // Dynamically creates a repeating track texture without external files
+        function createTurfTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            // Base dark green
+            ctx.fillStyle = '#2E7D32';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            // Light green main path
+            ctx.fillStyle = '#43A047';
+            ctx.fillRect(80, 0, 352, 512);
+
+            // White dashed line markers for high speed feeling
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            for(let i=0; i<6; i++) {
+                ctx.fillRect(150 + i * 40, 0, 4, 150); // Dash
+            }
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(6, 40); // Repeat highly along Z axis
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            return texture;
+        }
+
+        // Dynamically creates a soft glowing particle for dust
+        function createParticleTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.4, 'rgba(150, 255, 200, 0.5)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 32, 32);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function updateCameraPosition() {
+            // Spherical to Cartesian coordinate translation
+            camera.position.x = cameraParams.target.x + cameraParams.radius * Math.sin(cameraParams.phi) * Math.sin(cameraParams.theta);
+            camera.position.y = cameraParams.target.y + cameraParams.radius * Math.cos(cameraParams.phi);
+            camera.position.z = cameraParams.target.z + cameraParams.radius * Math.sin(cameraParams.phi) * Math.cos(cameraParams.theta);
+            
+            // Apply dramatic camera tilt based on rotation
+            const targetRot = Math.sin(cameraParams.theta) * -0.05;
+            camera.rotation.z = targetRot;
+            
+            camera.lookAt(cameraParams.target);
+        }
+
+        // ==========================================
+        // 4. OBJECT CREATION (Course, Horses, Effects)
+        // ==========================================
+        
+        function createCourse() {
+            courseGroup = new THREE.Group();
+            scene.add(courseGroup);
+
+            // Main Ground
+            const groundGeo = new THREE.PlaneGeometry(250, 1000, 1, 1);
+            const groundMat = new THREE.MeshStandardMaterial({
+                map: createTurfTexture(),
+                roughness: 0.8,
+                metalness: 0.1
+            });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            courseGroup.add(ground);
+            
+            // Save texture reference to animate scrolling
+            courseGroup.userData.groundText = ground.material.map;
+
+            // Simple Track Fences
+            const fenceMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
+            const postGeo = new THREE.CylinderGeometry(0.15, 0.15, 1.8, 8);
+            const railGeo = new THREE.BoxGeometry(0.1, 0.25, 1000);
+
+            // Left Rail
+            const railL = new THREE.Mesh(railGeo, fenceMat);
+            railL.position.set(-18, 1.4, 0);
+            courseGroup.add(railL);
+
+            // Right Rail
+            const railR = new THREE.Mesh(railGeo, fenceMat);
+            railR.position.set(18, 1.4, 0);
+            courseGroup.add(railR);
+
+            // Fence Posts along the track
+            for(let i = -500; i <= 500; i += 20) {
+                let postL = new THREE.Mesh(postGeo, fenceMat);
+                postL.position.set(-18, 0.9, i);
+                postL.castShadow = true;
+                postL.receiveShadow = true;
+                courseGroup.add(postL);
+
+                let postR = new THREE.Mesh(postGeo, fenceMat);
+                postR.position.set(18, 0.9, i);
+                postR.castShadow = true;
+                postR.receiveShadow = true;
+                courseGroup.add(postR);
+            }
+        }
+
+        // Composes a Horse and Jockey using only primitives - NOW CUTER (Chibi Style)
+        function createHorse(isSuzuka) {
+            const horseGroup = new THREE.Group();
+
+            // Dynamic coloring - Softened colors
+            const horseColor = isSuzuka ? 0xcc7744 : (Math.random() > 0.5 ? 0x665544 : 0x332211); 
+            const horseMat = new THREE.MeshStandardMaterial({ color: horseColor, roughness: 0.8 });
+
+            // 1. Torso (Rounder & shorter)
+            const torsoGeo = new THREE.SphereGeometry(0.8, 16, 16);
+            const torso = new THREE.Mesh(torsoGeo, horseMat);
+            torso.scale.set(1, 1, 1.4); // Oval torso
+            torso.position.set(0, 2.2, 0);
+            torso.castShadow = true;
+            horseGroup.add(torso);
+
+            // 2. Neck (Slightly thicker)
+            const neckGeo = new THREE.CylinderGeometry(0.35, 0.45, 1.2, 8);
+            const neck = new THREE.Mesh(neckGeo, horseMat);
+            neck.position.set(0, 2.8, 1.1);
+            neck.rotation.x = Math.PI / 3;
+            neck.castShadow = true;
+            horseGroup.add(neck);
+
+            // 3. Head (More horse-like shape but still cute)
+            const headGroup = new THREE.Group();
+            headGroup.position.set(0, 3.6, 1.7);
+            headGroup.rotation.x = -Math.PI / 8;
+            horseGroup.add(headGroup);
+
+            // Upper Head (Brain case)
+            const headUpperGeo = new THREE.SphereGeometry(0.5, 12, 12);
+            const headUpper = new THREE.Mesh(headUpperGeo, horseMat);
+            headUpper.scale.set(1, 1.1, 1);
+            headGroup.add(headUpper);
+
+            // Long Snout (Muzzle)
+            const snoutGeo = new THREE.SphereGeometry(0.35, 12, 12);
+            const snout = new THREE.Mesh(snoutGeo, horseMat);
+            snout.position.set(0, -0.2, 0.6);
+            snout.scale.set(0.9, 0.8, 1.8); // Elongated snout
+            headGroup.add(snout);
+
+            // --- Facial Features ---
+            const eyeGeo = new THREE.SphereGeometry(0.14, 8, 8);
+            const eyeMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+            const sparkGeo = new THREE.SphereGeometry(0.05, 4, 4);
+            const sparkMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+
+            // Left Eye (Positioned slightly to the side)
+            const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+            eyeL.position.set(0.42, 0.15, 0.1);
+            headGroup.add(eyeL);
+            const sparkL = new THREE.Mesh(sparkGeo, sparkMat);
+            sparkL.position.set(0.06, 0.06, 0.08);
+            eyeL.add(sparkL);
+
+            // Right Eye (Positioned slightly to the side)
+            const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+            eyeR.position.set(-0.42, 0.15, 0.1);
+            headGroup.add(eyeR);
+            const sparkR = new THREE.Mesh(sparkGeo, sparkMat);
+            sparkR.position.set(-0.06, 0.06, 0.08);
+            eyeR.add(sparkR);
+
+            // Nostrils
+            const nostrilGeo = new THREE.SphereGeometry(0.06, 4, 4);
+            const nostrilMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+            const nostrilL = new THREE.Mesh(nostrilGeo, nostrilMat);
+            nostrilL.position.set(0.15, -0.1, 1.0);
+            headGroup.add(nostrilL);
+            const nostrilR = new THREE.Mesh(nostrilGeo, nostrilMat);
+            nostrilR.position.set(-0.15, -0.1, 1.0);
+            headGroup.add(nostrilR);
+
+            // --- Specific Details for Silent Suzuka ---
+            if(isSuzuka) {
+                // Remove the full face hood and only use green ear covers
+                const earMat = new THREE.MeshStandardMaterial({ color: 0x00cc44 }); // Signature Green
+                
+                // Ears with green covers
+                const earGeo = new THREE.ConeGeometry(0.15, 0.5, 8);
+                const earL = new THREE.Mesh(earGeo, earMat); earL.position.set(0.25, 0.5, -0.1); earL.rotation.z = -0.3;
+                const earR = new THREE.Mesh(earGeo, earMat); earR.position.set(-0.25, 0.5, -0.1); earR.rotation.z = 0.3;
+                headGroup.add(earL); headGroup.add(earR);
+
+                // Small green noseband instead of full hood
+                const bandGeo = new THREE.TorusGeometry(0.32, 0.03, 8, 24);
+                const band = new THREE.Mesh(bandGeo, earMat);
+                band.position.set(0, -0.15, 0.35);
+                band.rotation.x = Math.PI / 2;
+                band.scale.set(1, 1.5, 1);
+                headGroup.add(band);
+            } else {
+                // Regular ears
+                const earGeo = new THREE.ConeGeometry(0.12, 0.45, 8);
+                const earL = new THREE.Mesh(earGeo, horseMat); earL.position.set(0.22, 0.5, -0.1);
+                const earR = new THREE.Mesh(earGeo, horseMat); earR.position.set(-0.22, 0.5, -0.1);
+                headGroup.add(earL); headGroup.add(earR);
+            }
+
+            // 4. Legs Setup (Slightly shorter & stumpier)
+            const legGeo = new THREE.BoxGeometry(0.3, 1.4, 0.3);
+            const legs = [];
+            const legPos = [
+                [-0.4, 1.1, 0.8], // Front Left
+                [0.4, 1.1, 0.8],  // Front Right
+                [-0.4, 1.1, -0.8], // Back Left
+                [0.4, 1.1, -0.8]   // Back Right
+            ];
+
+            legPos.forEach((pos) => {
+                const pivot = new THREE.Group();
+                pivot.position.set(pos[0], pos[1] + 0.7, pos[2]); 
+                const leg = new THREE.Mesh(legGeo, horseMat);
+                leg.position.set(0, -0.7, 0);
+                leg.castShadow = true;
+                pivot.add(leg);
+                horseGroup.add(pivot);
+                legs.push(pivot);
+            });
+
+            // 5. Tail
+            const tailPivot = new THREE.Group();
+            tailPivot.position.set(0, 2.5, -1.3);
+            const tailGeo = new THREE.SphereGeometry(0.2, 8, 8);
+            const tail = new THREE.Mesh(tailGeo, horseMat);
+            tail.scale.set(0.6, 0.6, 2.5);
+            tail.position.set(0, -0.4, -0.4);
+            tail.rotation.x = -Math.PI / 4;
+            tailPivot.add(tail);
+            horseGroup.add(tailPivot);
+
+            // 6. Jockey Setup (Chibi Jockey)
+            const mainSuitColor = isSuzuka ? 0x00cc44 : (Math.random() * 0xffffff);
+            const sleeveColor = isSuzuka ? 0xffdd00 : mainSuitColor;
+            
+            // Jockey Torso (Rounder)
+            const jTorsoGeo = new THREE.SphereGeometry(0.42, 12, 12);
+            const jTorsoMat = new THREE.MeshStandardMaterial({ color: mainSuitColor });
+            const jTorso = new THREE.Mesh(jTorsoGeo, jTorsoMat);
+            jTorso.scale.set(0.8, 1, 0.7);
+            jTorso.position.set(0, 3.4, 0.1); // Raised to avoid clipping
+            jTorso.rotation.x = Math.PI / 3;
+            jTorso.castShadow = true;
+            horseGroup.add(jTorso);
+
+            // Jockey Arms
+            const jArmGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.7, 8);
+            const jArmMat = new THREE.MeshStandardMaterial({ color: sleeveColor });
+            const jArmL = new THREE.Mesh(jArmGeo, jArmMat); jArmL.position.set(-0.4, 0.1, 0.2); jArmL.rotation.z = 0.6;
+            const jArmR = new THREE.Mesh(jArmGeo, jArmMat); jArmR.position.set(0.4, 0.1, 0.2); jArmR.rotation.z = -0.6;
+            jTorso.add(jArmL);
+            jTorso.add(jArmR);
+
+            // Jockey Legs (Spread out to wrap around horse body)
+            const jLegGeo = new THREE.CylinderGeometry(0.15, 0.12, 0.6, 8);
+            const jLegMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const jLegL = new THREE.Mesh(jLegGeo, jLegMat);
+            jLegL.position.set(-0.45, -0.3, 0); 
+            jLegL.rotation.z = 1.1; // Wide spread
+            jLegL.rotation.x = -Math.PI / 6;
+            jTorso.add(jLegL);
+
+            const jLegR = new THREE.Mesh(jLegGeo, jLegMat);
+            jLegR.position.set(0.45, -0.3, 0);
+            jLegR.rotation.z = -1.1; // Wide spread
+            jLegR.rotation.x = -Math.PI / 6;
+            jTorso.add(jLegR);
+
+            // Jockey Helmet (Large for Chibi look)
+            const jHelmetGeo = new THREE.SphereGeometry(0.32, 12, 12);
+            const jHelmetMat = new THREE.MeshStandardMaterial({ color: isSuzuka ? 0x00cc44 : Math.random() * 0xffffff });
+            const jHelmet = new THREE.Mesh(jHelmetGeo, jHelmetMat);
+            jHelmet.position.set(0, 0.5, 0);
+            jHelmet.rotation.x = -Math.PI / 6;
+            jTorso.add(jHelmet);
+
+            // Jockey Goggles/Face
+            const jFaceGeo = new THREE.SphereGeometry(0.28, 8, 8);
+            const jFaceMat = new THREE.MeshStandardMaterial({ color: 0xffdbac }); // Skin tone
+            const jFace = new THREE.Mesh(jFaceGeo, jFaceMat);
+            jFace.position.set(0, 0.45, 0.1);
+            jTorso.add(jFace);
+
+            // Goggles
+            const goggleGeo = new THREE.BoxGeometry(0.45, 0.15, 0.1);
+            const goggleMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            const goggles = new THREE.Mesh(goggleGeo, goggleMat);
+            goggles.position.set(0, 0, 0.25);
+            jFace.add(goggles);
+
+            // Face horse away from camera natively (towards -Z axis)
+            horseGroup.rotation.y = Math.PI;
+
+            // Preserve references for animation loops
+            horseGroup.userData = {
+                torso: torso,
+                head: headGroup,
+                neck: neck,
+                jockey: jTorso,
+                legs: legs,
+                tail: tailPivot,
+                isSuzuka: isSuzuka,
+                phaseOffset: Math.random() * Math.PI * 2
+            };
+
+            return horseGroup;
+        }
+
+        function createHorses() {
+            // Main Focus: Silent Suzuka
+            suzukaGroup = createHorse(true);
+            suzukaGroup.position.set(0, 0, 0); // Origin
+            scene.add(suzukaGroup);
+
+            // Concept: 「大差の逃げ」 (Huge Lead)
+            // Generate opponents who are struggling far behind Suzuka
+            for(let i = 0; i < 6; i++) {
+                let op = createHorse(false);
+                // Position them at positive Z (since horse faces -Z, +Z is behind)
+                op.position.set((Math.random() - 0.5) * 16, 0, 80 + Math.random() * 100);
+                scene.add(op);
+                opponents.push(op);
+            }
+        }
+
+        function createSpeedEffects() {
+            // 1. Glowing Dust Particles
+            const pCount = 800;
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = new Float32Array(pCount * 3);
+            
+            for(let i=0; i<pCount*3; i+=3) {
+                pPos[i] = (Math.random() - 0.5) * 40;       // x
+                pPos[i+1] = Math.random() * 3;              // y
+                pPos[i+2] = (Math.random() - 0.5) * 120;    // z
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            
+            const pMat = new THREE.PointsMaterial({
+                size: 2.5,
+                map: createParticleTexture(),
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            particlesSystem = new THREE.Points(pGeo, pMat);
+            scene.add(particlesSystem);
+
+            // 2. Anime-style Speed Lines Streaming Pasts
+            const lineCount = 300;
+            const lineGeo = new THREE.BufferGeometry();
+            const linePos = new Float32Array(lineCount * 6); // 2 vertices per segment
+            
+            for(let i=0; i<lineCount * 6; i+=6) {
+                let x = (Math.random() - 0.5) * 50;
+                let y = Math.random() * 15 + 1;
+                let z = (Math.random() - 0.5) * 150;
+                let length = 10 + Math.random() * 20;
+                
+                // Point start
+                linePos[i] = x;
+                linePos[i+1] = y;
+                linePos[i+2] = z;
+                // Point end (stretched back)
+                linePos[i+3] = x;
+                linePos[i+4] = y;
+                linePos[i+5] = z + length;
+            }
+            
+            lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
+            const lineMat = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.25
+            });
+            
+            speedLinesSystem = new THREE.LineSegments(lineGeo, lineMat);
+            scene.add(speedLinesSystem);
+        }
+
+        // ==========================================
+        // 5. ANIMATION & GAME LOOP
+        // ==========================================
+
+        function handleResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Animates the gallop cycle of given horse group
+        function animateRunning(group, speedMulti) {
+            const data = group.userData;
+            const time = animTime * speedMulti + data.phaseOffset;
+
+            // 4-beat gallop phasing logic
+            const stride1 = Math.sin(time);
+            const stride2 = Math.sin(time - 0.6);
+            const stride3 = Math.sin(time + Math.PI);
+            const stride4 = Math.sin(time + Math.PI - 0.6);
+
+            // Animate Legs Rotation
+            data.legs[0].rotation.x = stride1 * 0.9; 
+            data.legs[1].rotation.x = stride2 * 0.9;
+            data.legs[2].rotation.x = stride3 * 0.9;
+            data.legs[3].rotation.x = stride4 * 0.9;
+
+            // Intensive body bobbing and torque
+            data.torso.position.y = 2.2 + Math.cos(time * 2) * 0.15;
+            data.torso.rotation.x = Math.sin(time) * 0.05;
+            
+            // Tail wagging
+            if (data.tail) {
+                data.tail.rotation.y = Math.sin(time * 2) * 0.4;
+                data.tail.rotation.x = Math.sin(time) * 0.2;
+            }
+
+            // Jockey sync (Now higher to avoid clipping)
+            data.jockey.position.y = 3.4 + Math.cos(time * 2 - 0.4) * 0.15;
+            
+            // Head and neck stretching dynamically
+            data.neck.rotation.x = (Math.PI / 3) + Math.cos(time) * 0.1;
+            data.head.rotation.x = -(Math.PI / 8) - Math.cos(time) * 0.1;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Base simulation time step
+            animTime += 0.25; 
+
+            // --- 1. Illusion of High Speed ---
+            // Scroll ground texture to simulate massive forward movement
+            if (courseGroup.userData.groundText) {
+                // Moving offset Upwards in V space moves texture into negative Z
+                courseGroup.userData.groundText.offset.y -= 0.18; 
+            }
+
+            // --- 2. Animate Horses ---
+            // Suzuka is full throttle
+            animateRunning(suzukaGroup, 1.4);
+
+            // Opponents logic: They are inherently slower, falling behind
+            opponents.forEach(op => {
+                animateRunning(op, 1.1); // Slower animation cycle
+                op.position.z += 0.35;    // Fall physically behind (towards +Z axis)
+
+                // If they fall way too far off camera, respawn them ahead just out of view to keep populating
+                if(op.position.z > 200) {
+                    op.position.z = 60 + Math.random() * 20; 
+                    op.position.x = (Math.random() - 0.5) * 16;
+                }
+            });
+
+            // --- 3. Particles & Speed Lines Mechanics ---
+            // Move dust up and towards camera (+Z)
+            const pPos = particlesSystem.geometry.attributes.position.array;
+            for(let i=0; i < pPos.length; i+=3) {
+                pPos[i+1] += 0.15; // Float up
+                pPos[i+2] += 4.5;  // Extreme speed stream towards camera (+Z)
+                
+                if(pPos[i+2] > 60) {
+                    pPos[i] = (Math.random() - 0.5) * 40; // New X
+                    pPos[i+1] = Math.random() * 2;        // Low Y
+                    pPos[i+2] -= 150;                     // Push back in depth
+                }
+            }
+            particlesSystem.geometry.attributes.position.needsUpdate = true;
+
+            // Move speed lines
+            const lPos = speedLinesSystem.geometry.attributes.position.array;
+            for(let i=0; i < lPos.length; i+=6) {
+                const lineSpeed = 8.0;
+                lPos[i+2] += lineSpeed; // start Z
+                lPos[i+5] += lineSpeed; // end Z
+                
+                if(lPos[i+2] > 60) {
+                    const offset = 200;
+                    lPos[i+2] -= offset;
+                    lPos[i+5] -= offset;
+                    
+                    // Slightly randomize lateral position upon recycle to keep lines varied
+                    const newX = (Math.random() - 0.5) * 50;
+                    const newY = Math.random() * 15 + 1;
+                    lPos[i] = newX; lPos[i+3] = newX;
+                    lPos[i+1] = newY; lPos[i+4] = newY;
+                }
+            }
+            speedLinesSystem.geometry.attributes.position.needsUpdate = true;
+
+            // --- 4. Camera Dynamics ---
+            updateCameraPosition();
+            
+            // Dynamic FOV to simulate hyper-speed acceleration (Warp effect)
+            const fovPulse = Math.sin(animTime * 0.08) * 4;
+            camera.fov = fovBase + fovPulse;
+            camera.updateProjectionMatrix();
+
+            // Render execution
+            renderer.render(scene, camera);
+        }
+
+        // Boot
+        init();
+    </script>
+</body>
+</html>
