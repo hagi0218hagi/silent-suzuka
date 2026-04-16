@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jockey Memoirs - Silent Suzuka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
+                <a href="history.html" class="nav-link hover:text-green-primary transition">HISTORY</a>
+                <a href="scenes.html" class="nav-link hover:text-green-primary transition">SCENES</a>
+                <a href="memoirs.html" class="nav-link active hover:text-green-primary transition">MEMOIRS</a>
+                <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
+                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button onclick="toggleTheme()" class="text-xl theme-toggle-icon">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <a href="index.html" class="block w-full py-2">HOME</a>
+            <a href="history.html" class="block w-full py-2">HISTORY</a>
+            <a href="scenes.html" class="block w-full py-2">SCENES</a>
+            <a href="memoirs.html" class="block w-full py-2 font-black text-green-primary">MEMOIRS</a>
+            <a href="memorial.html" class="block w-full py-2">MEMORIAL</a>
+            <a href="goods.html" class="block w-full py-2">GOODS</a>
+        </div>
+    </nav>
+
+    <!-- Page: MEMOIRS -->
+    <section class="pt-32 pb-20 fade-in">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic uppercase">Jockey Memoirs</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">背中を知る者たちが語る、唯一無二の輝き</p>
+            </div>
+
+            <div class="space-y-16">
+                <!-- 武豊 -->
+                <div class="relative pl-8 md:pl-16">
+                    <div class="absolute left-0 top-0 text-8xl font-black text-green-primary/10 select-none">"</div>
+                    <div class="bg-gray-50 dark:bg-stone-800/50 p-8 md:p-12 rounded-3xl border-l-8 border-green-primary relative">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-green-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">武</div>
+                            <div>
+                                <h3 class="text-xl font-black">武豊</h3>
+                                <p class="text-sm text-gray-500">主戦騎手 (1998〜)</p>
+                            </div>
+                        </div>
+                        <p class="text-lg md:text-xl leading-relaxed italic text-gray-700 dark:text-gray-300">
+                            「あんな馬は、後にも先にもいない。スピードの次元が違ったんです。
+                            普通の馬ならオーバーペースに感じるラップも、スズカにとっては自然なリズムだった。」
+                            <br><br>
+                            「今でも夢に見ることがあります。もしあの秋、そのままゴールを駆け抜けていたら、どんな景色が見えたんだろうかと。
+                            彼は僕に、競馬の新しい可能性を見せてくれた馬でした。」
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 岡部幸雄 -->
+                <div class="relative pr-8 md:pr-16 text-right">
+                    <div class="absolute right-0 top-0 text-8xl font-black text-green-primary/10 select-none">"</div>
+                    <div class="bg-gray-50 dark:bg-stone-800/50 p-8 md:p-12 rounded-3xl border-r-8 border-gray-400 relative">
+                        <div class="flex items-center gap-4 mb-6 justify-end">
+                            <div>
+                                <h3 class="text-xl font-black">岡部幸雄</h3>
+                                <p class="text-sm text-gray-500">香港カップ・中山記念など</p>
+                            </div>
+                            <div class="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center text-white text-2xl font-bold">岡</div>
+                        </div>
+                        <p class="text-lg md:text-xl leading-relaxed italic text-gray-700 dark:text-gray-300 text-left">
+                            「未完の大器だった頃から、その才能は際立っていた。
+                            特に中山記念で見せたあの走りは、一皮剥けた瞬間だったように思う。
+                            精神面での成長が伴ってからは、まさに手が付けられない強さだったね。」
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 藤田伸二 -->
+                <div class="relative pl-8 md:pl-16">
+                    <div class="absolute left-0 top-0 text-8xl font-black text-green-primary/10 select-none">"</div>
+                    <div class="bg-gray-50 dark:bg-stone-800/50 p-8 md:p-12 rounded-3xl border-l-8 border-stone-600 relative">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-stone-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">藤</div>
+                            <div>
+                                <h3 class="text-xl font-black">藤田伸二</h3>
+                                <p class="text-sm text-gray-500">プリンシパルS等</p>
+                            </div>
+                        </div>
+                        <p class="text-lg md:text-xl leading-relaxed italic text-gray-700 dark:text-gray-300">
+                            「ゲートで潜ったり、気性の激しいところもあったけど、走り出せばそのパワーは凄まじかった。
+                            ダービーまでの彼はまだ試行錯誤の途中だったけど、あの時のエネルギーは今でも手に残っているよ。」
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

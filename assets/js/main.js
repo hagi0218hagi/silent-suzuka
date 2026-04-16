@@ -32,6 +32,7 @@ const toggleMobileMenu = () => {
 const searchIndex = [
     { url: 'history.html', title: '競走履歴', text: '毎日王冠 金鯱賞 1998 宝塚記念 天皇賞' },
     { url: 'scenes.html', title: '名場面', text: '大逃げ 11馬身 57.4秒 最後のレース' },
+    { url: 'memoirs.html', title: '回顧録', text: '武豊 岡部幸雄 藤田伸二 ジョッキー 騎手' },
     { url: 'memorial.html', title: 'メモリアル', text: '平取町 稲原牧場 お墓 墓参' },
     { url: 'goods.html', title: 'コレクション', text: 'ぬいぐるみ グッズ' }
 ];
@@ -74,8 +75,41 @@ const initSearch = () => {
     });
 };
 
+// View Count Logic
+const initViewCount = () => {
+    const viewCountEl = document.getElementById('viewCount');
+    if (!viewCountEl) return;
+
+    let count = parseInt(localStorage.getItem('page_views') || '128402'); // Starting with a high base number
+    count++;
+    localStorage.setItem('page_views', count);
+    
+    // Animate counter
+    let current = count - 100; // Start animation from 100 below
+    if (current < 0) current = 0;
+    
+    const duration = 2000;
+    const startTime = performance.now();
+    
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOutQuad = t => t * (2 - t);
+        const val = Math.floor(current + (count - current) * easeOutQuad(progress));
+        
+        viewCountEl.textContent = val.toLocaleString();
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    };
+    
+    requestAnimationFrame(animate);
+};
+
 // Initialize everything on load
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initSearch();
+    initViewCount();
 });
