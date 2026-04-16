@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fan Board - Silent Suzuka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .message-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark .message-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
+                <a href="history.html" class="nav-link hover:text-green-primary transition">HISTORY</a>
+                <a href="scenes.html" class="nav-link hover:text-green-primary transition">SCENES</a>
+                <a href="memoirs.html" class="nav-link hover:text-green-primary transition">MEMOIRS</a>
+                <a href="board.html" class="nav-link active hover:text-green-primary transition">BOARD</a>
+                <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
+                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button onclick="toggleTheme()" class="text-xl theme-toggle-icon">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <a href="index.html" class="block w-full py-2">HOME</a>
+            <a href="history.html" class="block w-full py-2">HISTORY</a>
+            <a href="scenes.html" class="block w-full py-2">SCENES</a>
+            <a href="memoirs.html" class="block w-full py-2">MEMOIRS</a>
+            <a href="board.html" class="block w-full py-2 font-black text-green-primary">BOARD</a>
+            <a href="memorial.html" class="block w-full py-2">MEMORIAL</a>
+            <a href="goods.html" class="block w-full py-2">GOODS</a>
+        </div>
+    </nav>
+
+    <!-- Page: BOARD -->
+    <section class="pt-32 pb-20 fade-in">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">FAN BOARD</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">サイレントスズカへの想いを綴ってください</p>
+            </div>
+
+            <!-- Message Form -->
+            <div class="bg-gray-50 dark:bg-stone-800 rounded-3xl p-8 border dark:border-stone-700 mb-12">
+                <form id="boardForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 opacity-70">お名前 / Nickname</label>
+                        <input type="text" id="boardName" required placeholder="匿名希望" 
+                               class="w-full bg-white dark:bg-stone-900 border dark:border-stone-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 opacity-70">メッセージ / Message</label>
+                        <textarea id="boardMessage" required rows="4" placeholder="あなたの想いを教えてください..."
+                                  class="w-full bg-white dark:bg-stone-900 border dark:border-stone-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-primary outline-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-primary hover:bg-green-hover text-white font-black py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                        <span>投稿する</span>
+                        <span>✉️</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Message List -->
+            <div id="messageList" class="space-y-6">
+                <!-- Messages will be injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Board Logic
+        const boardForm = document.getElementById('boardForm');
+        const messageList = document.getElementById('messageList');
+
+        const initialMessages = [
+            { name: "SuzukaFan98", message: "あの金鯱賞は今でも最強のレースだと思っています。永遠のヒーローです！", date: "2024/04/15" },
+            { name: "競馬大好き", message: "武豊騎手とのコンビ、最高でした。ずっと大好きです。", date: "2024/04/10" },
+            { name: "名無しのファン", message: "いつか、平取町の牧場にも会いに行きたいです。", date: "2024/04/01" }
+        ];
+
+        const loadMessages = () => {
+            const savedMessages = JSON.parse(localStorage.getItem('board_messages') || '[]');
+            const allMessages = [...savedMessages, ...initialMessages];
+            
+            messageList.innerHTML = allMessages.map(m => `
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm fade-in">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="font-black text-green-primary dark:text-green-400">${m.name}</div>
+                        <div class="text-xs text-gray-400 font-bold">${m.date}</div>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">${m.message}</p>
+                </div>
+            `).join('');
+        };
+
+        boardForm.onsubmit = (e) => {
+            e.preventDefault();
+            const name = document.getElementById('boardName').value;
+            const message = document.getElementById('boardMessage').value;
+            const date = new Date().toLocaleDateString('ja-JP');
+
+            const savedMessages = JSON.parse(localStorage.getItem('board_messages') || '[]');
+            savedMessages.unshift({ name, message, date });
+            localStorage.setItem('board_messages', JSON.stringify(savedMessages));
+
+            boardForm.reset();
+            loadMessages();
+            
+            // Animation effect
+            messageList.firstElementChild.style.animation = "pulse 0.5s ease-in-out";
+        };
+
+        document.addEventListener('DOMContentLoaded', loadMessages);
+    </script>
+</body>
+</html>

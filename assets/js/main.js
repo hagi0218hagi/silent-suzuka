@@ -33,6 +33,7 @@ const searchIndex = [
     { url: 'history.html', title: '競走履歴', text: '毎日王冠 金鯱賞 1998 宝塚記念 天皇賞' },
     { url: 'scenes.html', title: '名場面', text: '大逃げ 11馬身 57.4秒 最後のレース' },
     { url: 'memoirs.html', title: '回顧録', text: '武豊 岡部幸雄 藤田伸二 ジョッキー 騎手' },
+    { url: 'board.html', title: '掲示板', text: 'ファン掲示板 書き込み メッセージ 交流' },
     { url: 'memorial.html', title: 'メモリアル', text: '平取町 稲原牧場 お墓 墓参' },
     { url: 'goods.html', title: 'コレクション', text: 'ぬいぐるみ グッズ' }
 ];
