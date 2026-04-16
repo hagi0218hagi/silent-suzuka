@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Famous Scenes - Silent Suzuka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
+                <a href="history.html" class="nav-link hover:text-green-primary transition">HISTORY</a>
+                <a href="scenes.html" class="nav-link active hover:text-green-primary transition">SCENES</a>
+                <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
+                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button onclick="toggleTheme()" class="text-xl theme-toggle-icon">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <a href="index.html" class="block w-full py-2">HOME</a>
+            <a href="history.html" class="block w-full py-2">HISTORY</a>
+            <a href="scenes.html" class="block w-full py-2">SCENES</a>
+            <a href="memorial.html" class="block w-full py-2">MEMORIAL</a>
+            <a href="goods.html" class="block w-full py-2">GOODS</a>
+        </div>
+    </nav>
+
+    <!-- Page: SCENES -->
+    <section class="pt-32 pb-20 bg-gray-50 dark:bg-stone-950 fade-in">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">FAMOUS SCENES</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">語り継がれる伝説の瞬間</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                <!-- 金鯱賞 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="assets/images/hero_background_1776300671538.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="金鯱賞">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic">大差の衝撃 - 1998 金鯱賞</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        2着に11馬身もの差をつけた、日本競馬史上最も衝撃的な圧勝劇。
+                        このレースで「異次元の逃亡者」という異名が不動のものとなりました。
+                    </p>
+                </div>
+
+                <!-- 宝塚記念 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="assets/images/takarazuka_kinen_race_1776300746076.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="宝塚記念">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic">悲願のG1初制覇 - 1998 宝塚記念</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        圧倒的な人気を背負い、ファン投票1位に応えて逃げ切り勝ち。
+                        「サイレントスズカ、どこまで行っても逃げまくる！」と実況が響きました。
+                    </p>
+                </div>
+
+                <!-- 天皇賞・秋 -->
+                <div class="group">
+                    <div class="relative h-80 bg-gray-200 dark:bg-stone-800 rounded-3xl overflow-hidden shadow-lg mb-6">
+                        <img src="assets/images/tenno_sho_race_sad_1776300782919.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="天皇賞・秋">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center p-6 transition-opacity group-hover:opacity-0">
+                            <span class="text-5xl mb-2 font-black italic tracking-tighter text-green-primary">57.4s</span>
+                            <div class="text-sm font-bold opacity-80">1000m通過タイム</div>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black mb-3 italic text-red-600 dark:text-red-400">沈黙の日曜日 - 1998 天皇賞(秋)</h3>
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed font-bold">
+                        誰も追いつけないスピードの彼方へ消えた、最後の逃亡劇。
+                        あの日、東京競馬場が静まり返った瞬間を、私たちは決して忘れません。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

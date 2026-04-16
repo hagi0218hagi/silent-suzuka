@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silent Suzuka - The Fastest Legend</title>
+    <title>Goods - Silent Suzuka</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,20 +35,16 @@
             <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
             
             <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
-                <a href="index.html" class="nav-link active hover:text-green-primary transition">HOME</a>
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
                 <a href="history.html" class="nav-link hover:text-green-primary transition">HISTORY</a>
                 <a href="scenes.html" class="nav-link hover:text-green-primary transition">SCENES</a>
                 <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
-                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                <a href="goods.html" class="nav-link active hover:text-green-primary transition">GOODS</a>
                 
-                <!-- Search Bar -->
                 <div class="relative ml-4">
-                    <input type="text" id="searchInput" placeholder="検索..." 
-                           class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
                     <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
                 </div>
-
-                <!-- Dark Mode Toggle -->
                 <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
             </div>
             
@@ -58,7 +54,6 @@
             </div>
         </div>
         
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
             <a href="index.html" class="block w-full py-2">HOME</a>
             <a href="history.html" class="block w-full py-2">HISTORY</a>
@@ -68,21 +63,32 @@
         </div>
     </nav>
 
-    <!-- Page: HOME -->
-    <section class="min-h-screen flex items-center justify-center hero-gradient text-white text-center fade-in" 
-             style="background-image: url('assets/images/hero_background_1776300671538.png');">
-        <div class="px-4 hero-content">
-            <div class="mb-6 inline-block border-2 border-white px-4 py-1 tracking-widest text-sm font-bold uppercase">Legendary Racehorse</div>
-            <h2 class="text-6xl md:text-8xl font-black mb-6 italic leading-tight">異次元の逃亡者</h2>
-            <p class="text-xl md:text-2xl mb-12 opacity-90 max-w-2xl mx-auto font-light">
-                「影さえ踏ませない」<br>
-                そのスピードは、誰にも追いつけない場所へ。
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-                <a href="history.html" class="bg-white text-green-primary hover:bg-green-50 px-6 py-4 rounded-xl font-bold transition shadow-lg inline-block">競走履歴</a>
-                <a href="scenes.html" class="bg-green-primary text-white hover:bg-green-hover px-6 py-4 rounded-xl font-bold transition shadow-lg inline-block">名場面</a>
-                <a href="memorial.html" class="bg-white text-green-primary hover:bg-green-50 px-6 py-4 rounded-xl font-bold transition shadow-lg border border-green-100 inline-block">お墓・墓参</a>
-                <a href="goods.html" class="bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white/30 px-6 py-4 rounded-xl font-bold transition inline-block">グッズ</a>
+    <!-- Page: GOODS -->
+    <section class="pt-32 pb-20 fade-in">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">COLLECTION</h2>
+            <div class="w-20 h-1 bg-green-primary mx-auto mb-16"></div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm hover:border-green-primary transition group">
+                    <div class="aspect-square bg-gray-100 dark:bg-stone-900 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-110 transition">🐴</div>
+                    <h4 class="font-black">アイドルホース</h4>
+                    <p class="text-xs text-gray-400 mt-2">ぬいぐるみ S/M/L</p>
+                </div>
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm hover:border-green-primary transition group">
+                    <div class="aspect-square bg-gray-100 dark:bg-stone-900 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-110 transition">👕</div>
+                    <h4 class="font-black">記念Tシャツ</h4>
+                    <p class="text-xs text-gray-400 mt-2">1998 毎日王冠モデル</p>
+                </div>
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm hover:border-green-primary transition group">
+                    <div class="aspect-square bg-gray-100 dark:bg-stone-900 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-110 transition">🖼️</div>
+                    <h4 class="font-black">限定パネル</h4>
+                    <p class="text-xs text-gray-400 mt-2">シリアルナンバー入り</p>
+                </div>
+                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm hover:border-green-primary transition group">
+                    <div class="aspect-square bg-gray-100 dark:bg-stone-900 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-110 transition">🎟️</div>
+                    <h4 class="font-black">クオカード</h4>
+                    <p class="text-xs text-gray-400 mt-2">名馬シリーズ</p>
+                </div>
             </div>
         </div>
     </section>
@@ -95,7 +101,6 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race History - Silent Suzuka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
+                <a href="history.html" class="nav-link active hover:text-green-primary transition">HISTORY</a>
+                <a href="scenes.html" class="nav-link hover:text-green-primary transition">SCENES</a>
+                <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
+                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button onclick="toggleTheme()" class="text-xl theme-toggle-icon">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <a href="index.html" class="block w-full py-2">HOME</a>
+            <a href="history.html" class="block w-full py-2">HISTORY</a>
+            <a href="scenes.html" class="block w-full py-2">SCENES</a>
+            <a href="memorial.html" class="block w-full py-2">MEMORIAL</a>
+            <a href="goods.html" class="block w-full py-2">GOODS</a>
+        </div>
+    </nav>
+
+    <!-- Page: HISTORY -->
+    <section class="pt-32 pb-20 fade-in">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">RACE HISTORY</h2>
+                <div class="w-20 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">サイレントスズカが駆け抜けた奇跡の軌跡</p>
+            </div>
+            <div class="space-y-6">
+                <!-- 1998.11.01 天皇賞(秋) -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-red-500">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-red-600 font-bold">1998.11.01</span>
+                            <h3 class="text-xl font-black mt-1">天皇賞(秋) (G1)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">東京競馬場 / 芝 2000m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-gray-100 dark:bg-stone-700 text-gray-500 px-4 py-1 rounded-full font-black text-sm">競走中止</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.10.11 毎日王冠 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.10.11</span>
+                            <h3 class="text-xl font-black mt-1">毎日王冠 (G2)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">東京競馬場 / 芝 1800m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:44.9</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1998.07.12 宝塚記念 -->
+                <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.07.12</span>
+                            <h3 class="text-xl font-black mt-1">宝塚記念 (G1)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">阪神競馬場 / 芝 2200m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 2:11.9</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More races... (keeping it concise for this task) -->
+                 <div class="bg-white dark:bg-stone-800 rounded-2xl shadow-sm border dark:border-stone-700 p-6 hover:shadow-md transition border-l-4 border-l-green-primary">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div>
+                            <span class="text-sm text-green-600 font-bold">1998.05.30</span>
+                            <h3 class="text-xl font-black mt-1">金鯱賞 (G2)</h3>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">中京競馬場 / 芝 2000m</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-right">
+                            <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-1 rounded-full font-black">1着</span>
+                            <p class="text-xs text-gray-400 mt-1">タイム: 1:57.8 (大差)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
