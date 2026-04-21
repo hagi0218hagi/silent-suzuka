@@ -126,18 +126,24 @@ const drawOmikuji = () => {
     const rankEl = document.getElementById('omikuji-rank');
     const messageEl = document.getElementById('omikuji-message');
 
-    // Start Shaking
+    // 以前の状態をリセット
+    result.classList.add('hidden');
+    result.classList.remove('animate-bounce-short');
+    retry.classList.add('hidden');
+    placeholder.classList.remove('hidden', 'opacity-50');
+
+    // シャカシャカ開始
     box.classList.add('animate-shake');
     placeholder.classList.add('opacity-50');
     
     setTimeout(() => {
-        // Stop Shaking
+        // シャカシャカ停止
         box.classList.remove('animate-shake');
         
-        // Pick random fortune
+        // ランダムに選ぶ
         const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
         
-        // Update UI
+        // UI更新
         rankEl.textContent = fortune.rank;
         messageEl.textContent = fortune.message;
         
@@ -145,7 +151,8 @@ const drawOmikuji = () => {
         result.classList.remove('hidden');
         retry.classList.remove('hidden');
         
-        // Add pop-in effect
+        // アニメーションを再トリガー（Reflow）
+        void result.offsetWidth; 
         result.classList.add('animate-bounce-short');
     }, 1000);
 };
