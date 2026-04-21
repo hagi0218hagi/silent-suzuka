@@ -104,6 +104,37 @@
         </div>
     </section>
 
+    <!-- Omikuji Section -->
+    <section class="py-20 bg-gray-50 dark:bg-stone-800/50">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="mb-12">
+                <h2 class="text-3xl font-black mb-2 text-green-primary dark:text-green-400">TODAY'S SPEED LUCK</h2>
+                <div class="w-16 h-1 bg-green-primary mx-auto"></div>
+                <p class="mt-4 text-gray-500 dark:text-gray-400 font-medium">今日のあなたの運勢をサイレントスズカが占います</p>
+            </div>
+
+            <div class="relative group max-w-sm mx-auto">
+                <!-- Omikuji Box Visual -->
+                <div id="omikuji-box" class="bg-white dark:bg-stone-700 rounded-3xl p-8 shadow-2xl border-2 border-green-100 dark:border-stone-600 transition-all duration-500 transform">
+                    <div class="text-6xl mb-6">🐎</div>
+                    <div id="omikuji-result" class="hidden animate-bounce-short">
+                        <div id="omikuji-rank" class="text-4xl font-black text-green-primary dark:text-green-400 mb-2">---</div>
+                        <div id="omikuji-message" class="text-gray-600 dark:text-gray-200 font-bold text-lg leading-relaxed">---</div>
+                    </div>
+                    <div id="omikuji-placeholder">
+                        <p class="text-gray-400 dark:text-gray-500 mb-6 italic">「蓋を開けるまで、結果はわからない」</p>
+                        <button onclick="drawOmikuji()" class="w-full bg-green-primary hover:bg-green-hover text-white font-black py-4 rounded-2xl shadow-lg transition-all active:scale-95">
+                            運勢を占う
+                        </button>
+                    </div>
+                    <button id="omikuji-retry" onclick="drawOmikuji()" class="hidden mt-6 text-green-primary dark:text-green-400 font-bold hover:underline">
+                        もう一度占う
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
         <div class="max-w-6xl mx-auto px-4 text-center">

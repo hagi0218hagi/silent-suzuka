@@ -108,6 +108,48 @@ const initViewCount = () => {
     requestAnimationFrame(animate);
 };
 
+
+// Omikuji Logic
+const fortunes = [
+    { rank: '大吉', message: '異次元の逃亡者級のスピードで、今日という日の先頭を駆け抜けられるでしょう！' },
+    { rank: '吉', message: '最後の直線で驚異の粘り脚を見せられそう。粘り強く取り組めば道は開けます。' },
+    { rank: '中吉', message: '影をも踏ませない快調なペース。自信を持って前進あるのみです。' },
+    { rank: '小吉', message: 'パドックでの気配は良好。落ち着いて一歩一歩進むのが吉です。' },
+    { rank: '末吉', message: 'スロースタートな予感。後半の追い上げに期待して、今は力を蓄えましょう。' }
+];
+
+const drawOmikuji = () => {
+    const box = document.getElementById('omikuji-box');
+    const result = document.getElementById('omikuji-result');
+    const placeholder = document.getElementById('omikuji-placeholder');
+    const retry = document.getElementById('omikuji-retry');
+    const rankEl = document.getElementById('omikuji-rank');
+    const messageEl = document.getElementById('omikuji-message');
+
+    // Start Shaking
+    box.classList.add('animate-shake');
+    placeholder.classList.add('opacity-50');
+    
+    setTimeout(() => {
+        // Stop Shaking
+        box.classList.remove('animate-shake');
+        
+        // Pick random fortune
+        const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+        
+        // Update UI
+        rankEl.textContent = fortune.rank;
+        messageEl.textContent = fortune.message;
+        
+        placeholder.classList.add('hidden');
+        result.classList.remove('hidden');
+        retry.classList.remove('hidden');
+        
+        // Add pop-in effect
+        result.classList.add('animate-bounce-short');
+    }, 1000);
+};
+
 // Initialize everything on load
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();

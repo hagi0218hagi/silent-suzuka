@@ -54,3 +54,23 @@ body {
     position: relative;
     z-index: 2;
 }
+
+/* Omikuji Animations */
+@keyframes shakeBox {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+}
+
+.animate-shake {
+    animation: shakeBox 0.2s ease-in-out infinite;
+}
+
+@keyframes bounceShort {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-short {
+    animation: bounceShort 0.5s ease-in-out;
+}
