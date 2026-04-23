@@ -81,9 +81,9 @@ const initViewCount = () => {
     const viewCountEl = document.getElementById('viewCount');
     if (!viewCountEl) return;
 
-    let count = parseInt(localStorage.getItem('page_views') || '0'); // Reset base number to 0 as requested by user
+    let count = parseInt(localStorage.getItem('suzuka_views_accurate') || '0'); // New key to force reset to 0 for everyone
     count++;
-    localStorage.setItem('page_views', count);
+    localStorage.setItem('suzuka_views_accurate', count);
     
     // Animate counter
     let current = count - 100; // Start animation from 100 below
