@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Silent Suzuka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            primary: '#2d5a27',
+                            hover: '#3d7a35',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-white dark:bg-stone-900 text-gray-800 dark:text-gray-100">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-black italic tracking-tighter text-green-primary dark:text-green-400">SILENT SUZUKA</a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="nav-link hover:text-green-primary transition">HOME</a>
+                <a href="profile.html" class="nav-link active hover:text-green-primary transition">PROFILE</a>
+                <a href="history.html" class="nav-link hover:text-green-primary transition">HISTORY</a>
+                <a href="scenes.html" class="nav-link hover:text-green-primary transition">SCENES</a>
+                <a href="memoirs.html" class="nav-link hover:text-green-primary transition">MEMOIRS</a>
+                <a href="board.html" class="nav-link hover:text-green-primary transition">BOARD</a>
+                <a href="memorial.html" class="nav-link hover:text-green-primary transition">MEMORIAL</a>
+                <a href="goods.html" class="nav-link hover:text-green-primary transition">GOODS</a>
+                <a href="simulation.html" class="nav-link hover:text-green-primary transition">SIMULATION</a>
+                
+                <div class="relative ml-4">
+                    <input type="text" id="searchInput" placeholder="検索..." class="bg-gray-100 dark:bg-stone-800 text-sm px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-green-primary outline-none text-gray-800 dark:text-white">
+                    <div id="searchResults" class="absolute top-12 right-0 w-64 bg-white dark:bg-stone-800 shadow-xl border border-gray-100 dark:border-stone-700 rounded-xl hidden flex-col overflow-hidden"></div>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-gray-100 dark:hover:bg-stone-800 rounded-full transition ml-2 theme-toggle-icon">🌙</button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-4">
+                <button onclick="toggleTheme()" class="text-xl theme-toggle-icon">🌙</button>
+                <button onclick="toggleMobileMenu()" class="text-2xl">☰</button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-stone-900 border-b dark:border-stone-800 p-4 space-y-4 font-bold text-center">
+            <a href="index.html" class="block w-full py-2">HOME</a>
+            <a href="profile.html" class="block w-full py-2 text-green-primary">PROFILE</a>
+            <a href="history.html" class="block w-full py-2">HISTORY</a>
+            <a href="scenes.html" class="block w-full py-2">SCENES</a>
+            <a href="memoirs.html" class="block w-full py-2">MEMOIRS</a>
+            <a href="board.html" class="block w-full py-2">BOARD</a>
+            <a href="memorial.html" class="block w-full py-2">MEMORIAL</a>
+            <a href="goods.html" class="block w-full py-2">GOODS</a>
+            <a href="simulation.html" class="block w-full py-2">SIMULATION</a>
+        </div>
+    </nav>
+
+    <!-- Page: PROFILE -->
+    <section class="pt-32 pb-20 fade-in">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                
+                <!-- Profile Image -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-green-primary to-green-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div class="relative overflow-hidden rounded-2xl shadow-2xl">
+                        <img src="assets/images/silent_suzuka_profile_1776905100711.png" alt="Silent Suzuka Portrait" class="w-full h-auto transform group-hover:scale-105 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-8 left-8">
+                            <h1 class="text-4xl md:text-5xl font-black text-white italic tracking-tighter">サイレントスズカ</h1>
+                            <p class="text-green-300 font-bold mt-2 tracking-widest text-sm uppercase">The Fastest Legend</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-black text-green-primary dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span>基本データ</span>
+                            <div class="h-1 flex-1 bg-gray-100 dark:bg-stone-800 rounded-full"></div>
+                        </h2>
+                        <div class="grid grid-cols-2 gap-y-4 text-sm md:text-base">
+                            <div class="font-bold text-gray-500 dark:text-gray-400">生年月日</div>
+                            <div class="font-bold">1994年5月1日</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">毛色</div>
+                            <div class="font-bold">栗毛</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">父</div>
+                            <div class="font-bold text-green-600 dark:text-green-400 underline decoration-green-600/30">サンデーサイレンス</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">母</div>
+                            <div class="font-bold">ワキア</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">生産者</div>
+                            <div class="font-bold">稲原牧場</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">調教師</div>
+                            <div class="font-bold">橋田満 (栗東)</div>
+                            
+                            <div class="font-bold text-gray-500 dark:text-gray-400">主戦騎手</div>
+                            <div class="font-bold">武豊</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-black text-green-primary dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span>競走成績</span>
+                            <div class="h-1 flex-1 bg-gray-100 dark:bg-stone-800 rounded-full"></div>
+                        </h2>
+                        <div class="flex items-center gap-8 text-center bg-gray-50 dark:bg-stone-800/50 p-6 rounded-2xl border border-gray-100 dark:border-stone-700">
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1">戦績</p>
+                                <p class="text-2xl md:text-3xl font-black italic">16戦9勝</p>
+                            </div>
+                            <div class="w-px h-12 bg-gray-200 dark:bg-stone-700"></div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1">獲得賞金</p>
+                                <p class="text-2xl md:text-3xl font-black italic">4.4億円</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 space-y-2 text-sm font-medium opacity-80 pl-2 border-l-2 border-green-primary/30">
+                            <p>・1998年 宝塚記念 (G1) 優勝</p>
+                            <p>・1998年 金鯱賞 (G2) 大差勝ち</p>
+                            <p>・1998年 毎日王冠 (G2) 勝利</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-black text-green-primary dark:text-green-400 mb-4 flex items-center gap-3">
+                            <span>「大逃げ」の美学</span>
+                            <div class="h-1 flex-1 bg-gray-100 dark:bg-stone-800 rounded-full"></div>
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                            「誰にも追いつけない場所で、一人で走るのが好き」<br>
+                            その言葉を体現するように、レース開始直後から圧倒的なリードを広げ、後続に影さえ踏ませないスタイル。
+                            彼の逃げは、単なる戦術ではなく、極限のスピードがもたらす芸術でした。
+                        </p>
+                    </div>
+
+                    <div class="pt-6">
+                        <a href="history.html" class="inline-flex items-center gap-2 bg-green-primary hover:bg-green-hover text-white px-8 py-4 rounded-full font-black transition-all shadow-lg active:scale-95 group">
+                            <span>全レース履歴を見る</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Cards -->
+    <section class="py-20 bg-gray-50 dark:bg-stone-800/50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-black text-green-primary dark:text-green-400 italic">EQUINE ABILITY</h2>
+                <p class="text-sm text-gray-500 font-bold mt-2">能力チャート</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Speed -->
+                <div class="bg-white dark:bg-stone-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-stone-700 text-center hover:translate-y-[-5px] transition-all">
+                    <div class="text-3xl mb-4">⚡</div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Speed</p>
+                    <p class="text-3xl font-black italic text-green-primary dark:text-green-400">SS</p>
+                </div>
+                <!-- Stamina -->
+                <div class="bg-white dark:bg-stone-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-stone-700 text-center hover:translate-y-[-5px] transition-all">
+                    <div class="text-3xl mb-4">🔋</div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Stamina</p>
+                    <p class="text-3xl font-black italic text-green-primary dark:text-green-400">A+</p>
+                </div>
+                <!-- Power -->
+                <div class="bg-white dark:bg-stone-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-stone-700 text-center hover:translate-y-[-5px] transition-all">
+                    <div class="text-3xl mb-4">💪</div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Power</p>
+                    <p class="text-3xl font-black italic text-green-primary dark:text-green-400">A</p>
+                </div>
+                <!-- Spirit -->
+                <div class="bg-white dark:bg-stone-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-stone-700 text-center hover:translate-y-[-5px] transition-all">
+                    <div class="text-3xl mb-4">🔥</div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Spirit</p>
+                    <p class="text-3xl font-black italic text-green-primary dark:text-green-400">S</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-stone-950 border-t dark:border-stone-800 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-2xl font-black italic text-green-primary dark:text-green-400 mb-4">SILENT SUZUKA</p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">© 2024 Silent Suzuka Fan Site. This is a tribute page.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
