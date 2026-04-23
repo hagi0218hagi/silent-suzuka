@@ -81,7 +81,7 @@ const initViewCount = () => {
     const viewCountEl = document.getElementById('viewCount');
     if (!viewCountEl) return;
 
-    let count = parseInt(localStorage.getItem('page_views') || '128402'); // Starting with a high base number
+    let count = parseInt(localStorage.getItem('page_views') || '0'); // Reset base number to 0 as requested by user
     count++;
     localStorage.setItem('page_views', count);
     
