@@ -88,7 +88,7 @@
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-black mb-2 text-green-primary dark:text-green-400 italic">FAN BOARD</h2>
                 <div class="w-20 h-1 bg-green-primary mx-auto"></div>
-                <p class="mt-4 text-gray-500 dark:text-gray-400">サイレントスズカへの想いを綴ってください</p>
+                <p class="mt-4 text-gray-500 dark:text-gray-400">サイレントスズカへの想いを綴ってください（※管理者の確認後に反映されます）</p>
             </div>
 
             <!-- Message Form -->
@@ -105,15 +105,17 @@
                                   class="w-full bg-white dark:bg-stone-900 border dark:border-stone-700 rounded-xl px-4 py-3 focus:ring-2 focus:ring-green-primary outline-none"></textarea>
                     </div>
                     <button type="submit" class="w-full bg-green-primary hover:bg-green-hover text-white font-black py-4 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
-                        <span>投稿する</span>
+                        <span>管理者に送信する</span>
                         <span>✉️</span>
                     </button>
+                    <p class="text-[10px] text-center text-gray-400 mt-2">※現在、投稿内容は管理者が手動でファイルに追記して公開する形をとっています。</p>
                 </form>
             </div>
 
             <!-- Message List -->
-            <div id="messageList" class="space-y-6">
-                <!-- Messages will be injected here -->
+            <div id="messageList" class="space-y-6 text-center py-10" id="loading">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-primary"></div>
+                <p class="mt-2 text-sm text-gray-400">読み込み中...</p>
             </div>
         </div>
     </section>
@@ -132,25 +134,35 @@
         const boardForm = document.getElementById('boardForm');
         const messageList = document.getElementById('messageList');
 
-        const initialMessages = [
-            { name: "SuzukaFan98", message: "あの金鯱賞は今でも最強のレースだと思っています。永遠のヒーローです！", date: "2024/04/15" },
-            { name: "競馬大好き", message: "武豊騎手とのコンビ、最高でした。ずっと大好きです。", date: "2024/04/10" },
-            { name: "名無しのファン", message: "いつか、平取町の牧場にも会いに行きたいです。", date: "2024/04/01" }
-        ];
+        // Fetch messages from JSON file
+        const loadMessages = async () => {
+            try {
+                const response = await fetch('data/comments.json');
+                const cloudMessages = await response.json();
+                
+                // 本人のプレビュー用（送信直後のもの）
+                const localMessages = JSON.parse(localStorage.getItem('board_messages_preview') || '[]');
+                
+                const allMessages = [...localMessages, ...cloudMessages];
+                
+                if (allMessages.length === 0) {
+                    messageList.innerHTML = '<p class="text-center text-gray-400">まだメッセージはありません。</p>';
+                    return;
+                }
 
-        const loadMessages = () => {
-            const savedMessages = JSON.parse(localStorage.getItem('board_messages') || '[]');
-            const allMessages = [...savedMessages, ...initialMessages];
-            
-            messageList.innerHTML = allMessages.map(m => `
-                <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm fade-in">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="font-black text-green-primary dark:text-green-400">${m.name}</div>
-                        <div class="text-xs text-gray-400 font-bold">${m.date}</div>
+                messageList.innerHTML = allMessages.map(m => `
+                    <div class="bg-white dark:bg-stone-800 border dark:border-stone-700 p-6 rounded-2xl shadow-sm fade-in text-left">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="font-black text-green-primary dark:text-green-400">${m.name}${m.isPreview ? ' <span class="text-[10px] bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 px-2 py-1 rounded ml-2 font-normal italic">送信済み (確認待ち)</span>' : ''}</div>
+                            <div class="text-xs text-gray-400 font-bold">${m.date}</div>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">${m.message}</p>
                     </div>
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">${m.message}</p>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messageList.innerHTML = '<p class="text-center text-red-400">メッセージの読み込みに失敗しました。</p>';
+            }
         };
 
         boardForm.onsubmit = (e) => {
@@ -159,18 +171,20 @@
             const message = document.getElementById('boardMessage').value;
             const date = new Date().toLocaleDateString('ja-JP');
 
-            const savedMessages = JSON.parse(localStorage.getItem('board_messages') || '[]');
-            savedMessages.unshift({ name, message, date });
-            localStorage.setItem('board_messages', JSON.stringify(savedMessages));
+            // プレビューとして一時保存（自分の画面にだけすぐ出すため）
+            const localMessages = JSON.parse(localStorage.getItem('board_messages_preview') || '[]');
+            localMessages.unshift({ name, message, date, isPreview: true });
+            localStorage.setItem('board_messages_preview', JSON.stringify(localMessages));
+
+            // 本来はここでFormspreeなどの外部サービスに送る設定をすると便利です
+            alert('メッセージありがとうございます！管理者が確認した後、コメント一覧に追加されます。');
 
             boardForm.reset();
             loadMessages();
-            
-            // Animation effect
-            messageList.firstElementChild.style.animation = "pulse 0.5s ease-in-out";
         };
 
         document.addEventListener('DOMContentLoaded', loadMessages);
     </script>
+
 </body>
 </html>
